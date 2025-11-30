@@ -1,56 +1,82 @@
-import React from "react";
-import { format, isBefore } from 'date-fns';
+import { Checkbox } from "./ui/checkbox";
+import { Badge } from "./ui/badge";
+import { Trash2, Calendar, Tag } from "lucide-react";
+import { Button } from "./ui/button";
+import { TodoItemProps } from "@/types/todos.types";
 
-interface TodoItemProps {
-    id : string;
-    task: string;
-    is_done: boolean;
-    deadline?: string;
-    onDelete: () => void;
-    onComplete: () => void;
-}
+export function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
+  const priorityColors = {
+    low: "bg-blue-100 text-blue-700 border-blue-200",
+    medium: "bg-amber-100 text-amber-700 border-amber-200",
+    high: "bg-rose-100 text-rose-700 border-rose-200",
+  };
 
-export const TodoItem: React.FC<TodoItemProps> = ({
-  task,
-  is_done,
-  deadline,
-  onDelete,
-  onComplete,
-}) => {
-    const isOverdue = deadline ? isBefore(new Date(deadline), new Date()) && !is_done : false;
+  const isOverdue = todo.dueDate && new Date(todo.dueDate) < new Date() && !todo.completed;
 
   return (
-    <div>
-      <div className="relative border-1 rounded-2xl p-2 border-amber-200 h-15 flex flex-row my-5 items-center w-[100%] mx-auto">
-        <input
-          type="checkbox"
-          checked={is_done}
-          onChange={onComplete}
-          className="scale-125 hover:scale-150 mx-4 transition-all cursor-capy-hover active:cursor-capy-click"
-        />
-        <div className="flex flex-row w-[50%] h-[50%] text-left items-center justify-between px-3">
-            <p className={`${is_done ? "text-gray-500 line-through" : ""}`}>{task}</p>
-        </div>
+    <div
+      className={`group flex items-start gap-3 p-4 rounded-lg border transition-all ${
+        todo.completed
+          ? "bg-neutral-50 border-neutral-200"
+          : "bg-white border-neutral-200 hover:border-neutral-300 hover:shadow-sm"
+      }`}
+    >
+      <Checkbox
+        checked={todo.completed}
+        onCheckedChange={() => onToggle(todo.id)}
+        className="mt-1 cursor-pointer bg-gray-100"
+      />
 
-        <div className="w-[25%]">
-            {deadline && <p className="text-sm text-gray-500 px-2">Due: {format(new Date(deadline), "MM/dd/yy")}</p>}
-        </div>
-
-        <button
-          onClick={onDelete}
-          className="rounded-xl p-2 hover:scale-105 bg-[#ab045e] hover:bg-red-600 transition-all cursor-capy-hover active:cursor-capy-click"
+      <div className="flex-1 min-w-0">
+        <p
+          className={`${
+            todo.completed
+              ? "line-through text-neutral-400"
+              : "text-neutral-900"
+          }`}
         >
-          Delete
-        </button>
+          {todo.text}
+        </p>
 
-        {deadline ?
-        isOverdue ?
-        (<div className="absolute bg-[#ab045e] h-6 w-20 p- rounded-lg -top-[10%] -right-[14%]">Overdue</div>)
-        : (<div className="absolute bg-[#ab045e] h-4 w-4 rounded-[50%] -top-[10%] right-0"></div>) 
-        : (null)
-        }
+        <div className="flex flex-wrap items-center gap-2 mt-2">
+          <Badge
+            variant="outline"
+            className={`text-xs ${priorityColors[todo.priority]}`}
+          >
+            {todo.priority}
+          </Badge>
 
+          {todo.category && (
+            <Badge variant="outline" className="text-xs bg-neutral-50 text-neutral-600 border-neutral-200">
+              <Tag className="w-3 h-3 mr-1" />
+              {todo.category}
+            </Badge>
+          )}
+
+          {todo.dueDate && (
+            <Badge
+              variant="outline"
+              className={`text-xs ${
+                isOverdue
+                  ? "bg-rose-50 text-rose-700 border-rose-200"
+                  : "bg-neutral-50 text-neutral-600 border-neutral-200"
+              }`}
+            >
+              <Calendar className="w-3 h-3 mr-1" />
+              {new Date(todo.dueDate).toLocaleDateString()}
+            </Badge>
+          )}
+        </div>
       </div>
+
+      <Button
+        variant="ghost"
+        size="icon"
+        className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0 text-neutral-400 hover:text-rose-600"
+        onClick={() => onDelete(todo.id)}
+      >
+        <Trash2 className="w-4 h-4" />
+      </Button>
     </div>
   );
-};
+}
