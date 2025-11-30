@@ -26,12 +26,17 @@ export function AuthForm() {
         if (error) throw error;
         toast.success("Logged in successfully!");
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
         });
         if (error) throw error;
-        toast.success("Account created! Please check your email to verify.");
+        
+        if (data.user?.identities?.length === 0) {
+          toast.error("This account already exists. Please log in instead.");
+        } else {
+          toast.success("Account created! Please check your email to verify.");
+        }
       }
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "An error occurred";
