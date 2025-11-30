@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
-import { TodoItem, Todo } from "./ToDoItem";
+import { TodoItem } from "./ToDoItem";
+import { Todo } from "@/types/todos.types";
 import { AddTodoForm } from "./AddToDoForm";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { Button } from "./ui/button";
@@ -154,7 +155,7 @@ export function TodoList() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-neutral-900 rounded-2xl mb-4">
-            <CheckCircle2 className="w-8 h-8 text-white" />
+            <CheckCircle2 className="w-8 h-8 text-white"/>
           </div>
           <h1 className="text-neutral-900 mb-2">My Tasks</h1>
           <p className="text-neutral-500">
@@ -166,7 +167,7 @@ export function TodoList() {
               variant="ghost"
               size="sm"
               onClick={handleSignOut}
-              className="text-xs"
+              className="text-xs cursor-pointer"
             >
               <LogOut className="w-3 h-3 mr-1" />
               Sign out
@@ -188,13 +189,13 @@ export function TodoList() {
             onValueChange={(value) => setFilter(value as typeof filter)}
           >
             <TabsList className="w-full">
-              <TabsTrigger value="all" className="flex-1">
+              <TabsTrigger value="all" className="flex-1 cursor-pointer">
                 All ({stats.total})
               </TabsTrigger>
-              <TabsTrigger value="active" className="flex-1">
+              <TabsTrigger value="active" className="flex-1 cursor-pointer">
                 Active ({stats.active})
               </TabsTrigger>
-              <TabsTrigger value="completed" className="flex-1">
+              <TabsTrigger value="completed" className="flex-1 cursor-pointer">
                 Completed ({stats.completed})
               </TabsTrigger>
             </TabsList>

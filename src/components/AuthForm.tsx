@@ -82,7 +82,7 @@ export function AuthForm() {
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -99,7 +99,7 @@ export function AuthForm() {
           <button
             type="button"
             onClick={() => setIsLogin(!isLogin)}
-            className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
+            className="text-sm cursor-pointer text-neutral-600 hover:text-neutral-900 transition-colors"
           >
             {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
           </button>

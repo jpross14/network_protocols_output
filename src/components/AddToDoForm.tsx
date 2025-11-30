@@ -5,10 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Calendar } from "./ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Plus, Calendar as CalendarIcon } from "lucide-react";
-
-interface AddTodoFormProps {
-  onAdd: (text: string, priority: "low" | "medium" | "high", category?: string, dueDate?: string) => void;
-}
+import { AddTodoFormProps } from "@/types/todos.types";
 
 export function AddTodoForm({ onAdd }: AddTodoFormProps) {
   const [text, setText] = useState("");
@@ -43,7 +40,7 @@ export function AddTodoForm({ onAdd }: AddTodoFormProps) {
           placeholder="What needs to be done?"
           className="flex-1"
         />
-        <Button type="submit" size="icon">
+        <Button className="cursor-pointer" type="submit" size="icon">
           <Plus className="w-4 h-4" />
         </Button>
       </div>
@@ -51,13 +48,13 @@ export function AddTodoForm({ onAdd }: AddTodoFormProps) {
       {showAdvanced && (
         <div className="flex flex-wrap gap-2">
           <Select value={priority} onValueChange={(value: "low" | "medium" | "high") => setPriority(value)}>
-            <SelectTrigger className="w-32">
+            <SelectTrigger className="w-32 cursor-pointer">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="low">Low</SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-              <SelectItem value="high">High</SelectItem>
+              <SelectItem className="cursor-pointer" value="low">Low</SelectItem>
+              <SelectItem className="cursor-pointer" value="medium">Medium</SelectItem>
+              <SelectItem className="cursor-pointer" value="high">High</SelectItem>
             </SelectContent>
           </Select>
 
@@ -70,7 +67,7 @@ export function AddTodoForm({ onAdd }: AddTodoFormProps) {
 
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="justify-start text-left">
+              <Button variant="outline" className="justify-start cursor-pointer text-left">
                 <CalendarIcon className="w-4 h-4 mr-2" />
                 {dueDate ? dueDate.toLocaleDateString() : "Due date"}
               </Button>
@@ -90,7 +87,7 @@ export function AddTodoForm({ onAdd }: AddTodoFormProps) {
       <button
         type="button"
         onClick={() => setShowAdvanced(!showAdvanced)}
-        className="text-xs text-neutral-500 hover:text-neutral-700 transition-colors"
+        className="text-xs cursor-pointer text-neutral-500 hover:text-neutral-700 transition-colors"
       >
         {showAdvanced ? "Hide options" : "Show more options"}
       </button>
