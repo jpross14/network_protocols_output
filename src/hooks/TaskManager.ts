@@ -1,7 +1,7 @@
-import { supabase } from "@/lib/supabaseClient";
-import { Todos } from "@/types/todos.types";
+import { supabase } from "@/lib/supabase";
+import { Todo } from "@/types/todos.types";
 
-export const fetchTodos = async (): Promise<Todos[]> => {
+export const fetchTodos = async (): Promise<Todo[]> => {
   const { data, error } = await supabase
     .from("todos")
     .select("*")
@@ -12,7 +12,7 @@ export const fetchTodos = async (): Promise<Todos[]> => {
     throw new Error("Could not fetch testimonials");
   }
 
-  return data as Todos[];
+  return data as Todo[];
 };
 
 export const deleteTodos = async (id: string): Promise<void> => {

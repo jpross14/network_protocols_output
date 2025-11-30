@@ -2,7 +2,23 @@ import { Checkbox } from "./ui/checkbox";
 import { Badge } from "./ui/badge";
 import { Trash2, Calendar, Tag } from "lucide-react";
 import { Button } from "./ui/button";
-import { TodoItemProps } from "@/types/todos.types";
+
+export interface Todo {
+  id: string;
+  user_id?: string;
+  text: string;
+  completed: boolean;
+  priority: "low" | "medium" | "high";
+  category?: string | null;
+  dueDate?: string | null;
+  created_at?: string;
+}
+
+interface TodoItemProps {
+  todo: Todo;
+  onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
+}
 
 export function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
   const priorityColors = {
@@ -24,7 +40,7 @@ export function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
       <Checkbox
         checked={todo.completed}
         onCheckedChange={() => onToggle(todo.id)}
-        className="mt-1 cursor-pointer bg-gray-100"
+        className="mt-1"
       />
 
       <div className="flex-1 min-w-0">
