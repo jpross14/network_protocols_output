@@ -49,6 +49,7 @@ export function TodoList() {
       }));
 
       setTodos(mappedTodos);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message || "Failed to fetch todos");
     } finally {
@@ -79,6 +80,7 @@ export function TodoList() {
 
       toast.success("Todo added!");
       fetchTodos();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message || "Failed to add todo");
     }
@@ -101,6 +103,7 @@ export function TodoList() {
           t.id === id ? { ...t, completed: !t.completed } : t
         )
       );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message || "Failed to update todo");
     }
@@ -114,6 +117,7 @@ export function TodoList() {
 
       setTodos(todos.filter((t) => t.id !== id));
       toast.success("Todo deleted!");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message || "Failed to delete todo");
     }
@@ -124,6 +128,7 @@ export function TodoList() {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       toast.success("Signed out successfully!");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message || "Failed to sign out");
     }
@@ -152,26 +157,37 @@ export function TodoList() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100 py-8 px-4">
       <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-neutral-900 rounded-2xl mb-4">
-            <CheckCircle2 className="w-8 h-8 text-white"/>
-          </div>
-          <h1 className="text-neutral-900 mb-2">My Tasks</h1>
-          <p className="text-neutral-500">
-            {stats.active} active · {stats.completed} completed
-          </p>
-          <div className="flex items-center justify-center gap-2 mt-2">
-            <span className="text-xs text-neutral-400">{userEmail}</span>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleSignOut}
-              className="text-xs cursor-pointer"
-            >
-              <LogOut className="w-3 h-3 mr-1" />
-              Sign out
-            </Button>
+        {/* Cleaner Header */}
+        <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 p-6 mb-8">
+          {/* Top Row */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl">
+                <CheckCircle2 className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-neutral-900">My Tasks</h1>
+                <p className="text-sm text-neutral-500">
+                  {stats.active} active · {stats.completed} completed
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <p className="text-sm font-medium text-neutral-700 truncate max-w-[180px]">
+                  {userEmail}
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleSignOut}
+                className="cursor-pointer"
+              >
+                <LogOut className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </div>
 

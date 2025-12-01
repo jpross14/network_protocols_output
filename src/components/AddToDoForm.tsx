@@ -41,20 +41,20 @@ export function AddTodoForm({ onAdd }: AddTodoFormProps) {
           className="flex-1"
         />
         <Button className="cursor-pointer" type="submit" size="icon">
-          <Plus className="w-4 h-4" />
+          <Plus className="w-4 h-4"/>
         </Button>
       </div>
 
       {showAdvanced && (
         <div className="flex flex-wrap gap-2">
           <Select value={priority} onValueChange={(value: "low" | "medium" | "high") => setPriority(value)}>
-            <SelectTrigger className="w-32 cursor-pointer">
+            <SelectTrigger className="w-25 cursor-pointer">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem className="cursor-pointer" value="low">Low</SelectItem>
-              <SelectItem className="cursor-pointer" value="medium">Medium</SelectItem>
-              <SelectItem className="cursor-pointer" value="high">High</SelectItem>
+              <SelectItem className="cursor-pointer" value="low">P1</SelectItem>
+              <SelectItem className="cursor-pointer" value="medium">P2</SelectItem>
+              <SelectItem className="cursor-pointer" value="high">P3</SelectItem>
             </SelectContent>
           </Select>
 
