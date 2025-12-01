@@ -7,6 +7,7 @@ import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { Button } from "./ui/button";
 import { CheckCircle2, LogOut, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { fetchTodos, addTodo, toggleTodo, deleteTodo } from "@/hooks/TaskManager";
 
 export function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -15,7 +16,7 @@ export function TodoList() {
   const [userEmail, setUserEmail] = useState("");
 
   useEffect(() => {
-    fetchTodos();
+    loadTodos();
     fetchUser();
   }, []);
 
@@ -26,29 +27,11 @@ export function TodoList() {
     }
   };
 
-  const fetchTodos = async () => {
+  const loadTodos = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from("todos")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-
-      // Map database columns to UI format
-      const mappedTodos: Todo[] = (data || []).map((todo) => ({
-        id: todo.id,
-        user_id: todo.user_id,
-        text: todo.text,
-        completed: todo.completed,
-        priority: todo.priority as "low" | "medium" | "high",
-        category: todo.category,
-        dueDate: todo.due_date,
-        created_at: todo.created_at,
-      }));
-
-      setTodos(mappedTodos);
+      const data = await fetchTodos();
+      setTodos(data);
     } catch (error: any) {
       toast.error(error.message || "Failed to fetch todos");
     } finally {
@@ -56,46 +39,26 @@ export function TodoList() {
     }
   };
 
-  const addTodo = async (
+  const handleAddTodo = async (
     text: string,
     priority: "low" | "medium" | "high",
     category?: string,
     dueDate?: string
   ) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
-
-      const { error } = await supabase.from("todos").insert({
-        user_id: user.id,
-        text,
-        priority,
-        category: category || null,
-        due_date: dueDate || null,
-        completed: false,
-      });
-
-      if (error) throw error;
-
+      await addTodo(text, priority, category, dueDate);
       toast.success("Todo added!");
-      fetchTodos();
+      loadTodos();
     } catch (error: any) {
       toast.error(error.message || "Failed to add todo");
     }
   };
 
-  const toggleTodo = async (id: string) => {
+  const handleToggleTodo = async (id: string) => {
     try {
       const todo = todos.find((t) => t.id === id);
       if (!todo) return;
-
-      const { error } = await supabase
-        .from("todos")
-        .update({ completed: !todo.completed })
-        .eq("id", id);
-
-      if (error) throw error;
-
+      await toggleTodo(id, todo.completed);
       setTodos(
         todos.map((t) =>
           t.id === id ? { ...t, completed: !t.completed } : t
@@ -106,12 +69,9 @@ export function TodoList() {
     }
   };
 
-  const deleteTodo = async (id: string) => {
+  const handleDeleteTodo = async (id: string) => {
     try {
-      const { error } = await supabase.from("todos").delete().eq("id", id);
-
-      if (error) throw error;
-
+      await deleteTodo(id);
       setTodos(todos.filter((t) => t.id !== id));
       toast.success("Todo deleted!");
     } catch (error: any) {
@@ -178,7 +138,7 @@ export function TodoList() {
         {/* Main Card */}
         <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 p-6 space-y-6">
           {/* Add Todo Form */}
-          <AddTodoForm onAdd={addTodo} />
+          <AddTodoForm onAdd={handleAddTodo} />
 
           {/* Separator */}
           <div className="border-t border-neutral-200" />
@@ -214,8 +174,8 @@ export function TodoList() {
                 <TodoItem
                   key={todo.id}
                   todo={todo}
-                  onToggle={toggleTodo}
-                  onDelete={deleteTodo}
+                  onToggle={handleToggleTodo}
+                  onDelete={handleDeleteTodo}
                 />
               ))
             )}
