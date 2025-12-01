@@ -31,7 +31,17 @@ export function TodoList() {
     try {
       setLoading(true);
       const data = await fetchTodos();
-      setTodos(data);
+
+      const mappedTodos: Todo[] = (data || []).map((todo) => ({
+        ...todo,
+        dueDate: todo.dueDate
+          ? /^\d{4}-\d{2}-\d{2}$/.test(todo.dueDate)
+            ? todo.dueDate
+            : new Date(todo.dueDate).toISOString().split("T")[0]
+          : null,
+      }));
+
+      setTodos(mappedTodos);
     } catch (error: any) {
       toast.error(error.message || "Failed to fetch todos");
     } finally {

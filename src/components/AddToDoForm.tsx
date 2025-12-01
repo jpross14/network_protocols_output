@@ -17,12 +17,17 @@ export function AddTodoForm({ onAdd }: AddTodoFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (text.trim()) {
+      const formattedDate = dueDate
+        ? dueDate.toLocaleDateString("en-CA")
+        : undefined;
+
       onAdd(
         text.trim(),
         priority,
         category.trim() || undefined,
-        dueDate?.toISOString()
+        formattedDate
       );
+
       setText("");
       setCategory("");
       setDueDate(undefined);
@@ -30,6 +35,7 @@ export function AddTodoForm({ onAdd }: AddTodoFormProps) {
       setShowAdvanced(false);
     }
   };
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
@@ -77,7 +83,7 @@ export function AddTodoForm({ onAdd }: AddTodoFormProps) {
                 mode="single"
                 selected={dueDate}
                 onSelect={setDueDate}
-                initialFocus
+                autoFocus
               />
             </PopoverContent>
           </Popover>

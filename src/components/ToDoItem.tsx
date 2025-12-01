@@ -11,7 +11,21 @@ export function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
     high: "bg-rose-100 text-rose-700 border-rose-200",
   };
 
-  const isOverdue = todo.dueDate && new Date(todo.dueDate) < new Date() && !todo.completed;
+  const formatDate = (dateValue?: string | null) => {
+    if (!dateValue) return null;
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
+      return dateValue;
+    }
+
+    const parsed = new Date(dateValue);
+    return parsed.toLocaleDateString("en-US", { timeZone: "Asia/Manila" });
+  };
+
+  const isOverdue =
+    todo.dueDate &&
+    new Date(todo.dueDate) < new Date() &&
+    !todo.completed;
 
   return (
     <div
@@ -47,7 +61,10 @@ export function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
           </Badge>
 
           {todo.category && (
-            <Badge variant="outline" className="text-xs bg-neutral-50 text-neutral-600 border-neutral-200">
+            <Badge
+              variant="outline"
+              className="text-xs bg-neutral-50 text-neutral-600 border-neutral-200"
+            >
               <Tag className="w-3 h-3 mr-1" />
               {todo.category}
             </Badge>
@@ -63,7 +80,7 @@ export function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
               }`}
             >
               <Calendar className="w-3 h-3 mr-1" />
-              {new Date(todo.dueDate).toLocaleDateString()}
+              {formatDate(todo.dueDate)}
             </Badge>
           )}
         </div>
